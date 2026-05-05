@@ -1743,7 +1743,7 @@ const OV_DATA = {
     {v:'Notizblock',l:'Notizblock'},{v:'Riso-Zine',l:'Riso-Zine'},{v:'Softcover',l:'Softcover'},
     {v:'Verpackung',l:'Verpackung'},{v:'Visitenkarte',l:'Visitenkarte'}
   ]},
-  druck:{default:'',defaultLabel:'HP Indigo Digitaldruck',placeholder:'Kein spezifisches Verfahren',opts:[
+  druck:{default:'HP Indigo',defaultLabel:'HP Indigo Digitaldruck',placeholder:'Kein spezifisches Verfahren',opts:[
     {v:'Heißfolie',l:'Heißfolie'},{v:'HP Indigo',l:'HP Indigo Digitaldruck'},{v:'Inkjet',l:'Inkjet'},
     {v:'Letterpress',l:'Letterpress'},{v:'MGI',l:'MGI'},{v:'Offset',l:'Offset'},
     {v:'Riso',l:'Riso'},{v:'Scodix',l:'Scodix'},{v:'Siebdruck',l:'Siebdruck'},{v:'UV-Offset',l:'UV-Offset'}
@@ -1759,14 +1759,14 @@ const OV_DATA = {
     {v:'Grüntöne',l:'Grüntöne'},{v:'Brauntöne',l:'Brauntöne'},{v:'Schwarz',l:'Schwarz'},
     {v:'Farbig',l:'Farbig / Bunt'},{v:'Neon',l:'Neon'},{v:'Metallisierend',l:'Metallisierend'}
   ]},
-  gramm:{default:'',defaultLabel:'dick',placeholder:'Keine Präferenz',opts:[
+  gramm:{default:'250–350 g/m²',defaultLabel:'dick',placeholder:'Keine Präferenz',opts:[
     {v:'< 100 g/m²',l:'dünn',g:'bis 100 g/m²'},{v:'100–150 g/m²',l:'leicht',g:'100–150 g/m²'},
     {v:'150–250 g/m²',l:'mittel',g:'150–250 g/m²'},{v:'250–350 g/m²',l:'dick',g:'250–350 g/m²'},
     {v:'> 350 g/m²',l:'sehr dick',g:'über 350 g/m²'}
   ]}
 };
 
-const ovSel = {anwendung:'Visitenkarte',druck:'',oberflaeche:'rau',farbe:'Warmwhite',gramm:''};
+const ovSel = {anwendung:'Visitenkarte',druck:'HP Indigo',oberflaeche:'rau',farbe:'Warmwhite',gramm:'250–350 g/m²'};
 let ovOpen = null;
 
 function ovBuildMenus() {
