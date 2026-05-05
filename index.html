@@ -292,7 +292,7 @@ textarea:focus{border-bottom-color:var(--accent);}
       <span>, möglichst </span>
       <span class="ws"><button class="ws-btn" onclick="ovToggle('gramm',event)"><span id="ovlbl-gramm">dick</span><span class="ws-arrow">▾</span></button><div class="ws-menu" id="ovmenu-gramm"></div></span>
       <span>, gedruckt im </span>
-      <span class="ws"><button class="ws-btn" onclick="ovToggle('druck',event)"><span id="ovlbl-druck">Digitaldruck</span><span class="ws-arrow">▾</span></button><div class="ws-menu" id="ovmenu-druck"></div></span>
+      <span class="ws"><button class="ws-btn" onclick="ovToggle('druck',event)"><span id="ovlbl-druck">HP Indigo</span><span class="ws-arrow">▾</span></button><div class="ws-menu" id="ovmenu-druck"></div></span>
       <span>.</span>
     </div>
     <button class="ov-cta" onclick="startFromOverlay()">⏱ 60 Sekunden starten</button>
@@ -1743,10 +1743,10 @@ const OV_DATA = {
     {v:'Notizblock',l:'Notizblock'},{v:'Riso-Zine',l:'Riso-Zine'},{v:'Softcover',l:'Softcover'},
     {v:'Verpackung',l:'Verpackung'},{v:'Visitenkarte',l:'Visitenkarte'}
   ]},
-  druck:{default:'',defaultLabel:'Digitaldruck',placeholder:'Kein spezifisches Verfahren',opts:[
-    {v:'Riso',l:'Riso'},{v:'HP Indigo',l:'HP Indigo'},{v:'Offset',l:'Offset'},
-    {v:'UV-Offset',l:'UV-Offset'},{v:'Letterpress',l:'Letterpress'},{v:'Siebdruck',l:'Siebdruck'},
-    {v:'Inkjet',l:'Inkjet'},{v:'Scodix',l:'Scodix'},{v:'MGI',l:'MGI'},{v:'Heißfolie',l:'Heißfolie'}
+  druck:{default:'',defaultLabel:'HP Indigo',placeholder:'Kein spezifisches Verfahren',opts:[
+    {v:'Heißfolie',l:'Heißfolie'},{v:'HP Indigo',l:'HP Indigo Digitaldruck'},{v:'Inkjet',l:'Inkjet'},
+    {v:'Letterpress',l:'Letterpress'},{v:'MGI',l:'MGI'},{v:'Offset',l:'Offset'},
+    {v:'Riso',l:'Riso'},{v:'Scodix',l:'Scodix'},{v:'Siebdruck',l:'Siebdruck'},{v:'UV-Offset',l:'UV-Offset'}
   ]},
   oberflaeche:{default:'rau',defaultLabel:'rauen',placeholder:null,opts:[
     {v:'extrem rau',l:'extrem rauen'},{v:'rau',l:'rauen'},{v:'leicht gestrichen',l:'leicht gestrichenen'},
@@ -1761,8 +1761,8 @@ const OV_DATA = {
   ]},
   gramm:{default:'',defaultLabel:'dick',placeholder:'Keine Präferenz',opts:[
     {v:'< 100 g/m²',l:'dünn',g:'bis 100 g/m²'},{v:'100–150 g/m²',l:'leicht',g:'100–150 g/m²'},
-    {v:'150–250 g/m²',l:'mittel',g:'150–250 g/m²'},{v:'250–350 g/m²',l:'schwer',g:'250–350 g/m²'},
-    {v:'> 350 g/m²',l:'sehr schwer',g:'über 350 g/m²'}
+    {v:'150–250 g/m²',l:'mittel',g:'150–250 g/m²'},{v:'250–350 g/m²',l:'dick',g:'250–350 g/m²'},
+    {v:'> 350 g/m²',l:'sehr dick',g:'über 350 g/m²'}
   ]}
 };
 
