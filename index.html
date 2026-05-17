@@ -428,7 +428,6 @@ textarea:focus{border-bottom-color:var(--accent);}
     <div class="filter-group" id="f-extras">
       <div class="filter-group-label">Extras</div>
       <div class="filter-pills">
-        <button class="filter-pill" onclick="togglePill(this,'extras','guenstig')">Günstig</button>
       </div>
     </div>
 
@@ -925,7 +924,6 @@ function updateActiveFilterDisplay() {
   if (activeFilters.oberflaeche.length)   parts.push('Oberfläche ' + activeFilters.oberflaeche.join(' oder '));
   if (activeFilters.farbe.length)         parts.push('Farbe/Weißton ' + activeFilters.farbe.join(' oder '));
   if (activeFilters.nachhaltig.length)    parts.push('nachhaltig (' + activeFilters.nachhaltig.join(', ') + ')');
-  if ((activeFilters.extras || []).includes('guenstig')) parts.push('günstig');
 
   const sentence = 'Ich suche ein Papier ' + parts.join(', ') + '.';
   document.getElementById('queryInput').value = sentence;
@@ -957,7 +955,6 @@ function injectFiltersIntoQuery() {
   if (activeFilters.oberflaeche.length) parts.push('Oberfläche ' + activeFilters.oberflaeche.join(' oder '));
   if (activeFilters.farbe.length)    parts.push('Farbe/Weißton ' + activeFilters.farbe.join(' oder '));
   if (activeFilters.nachhaltig.length) parts.push('nachhaltig (' + activeFilters.nachhaltig.join(', ') + ')');
-  if (activeFilters.extras.includes('guenstig')) parts.push('günstig');
 
   const sentence = parts.length > 0
     ? 'Ich suche ein Papier ' + parts.join(', ') + '.'
@@ -1097,9 +1094,6 @@ function applyHardFilters(papers) {
     res = res.filter(p => activeFilters.oberflaeche.some(o => oberflaecheMatches(p, o)));
   if (activeFilters.farbe.length)
     res = res.filter(p => activeFilters.farbe.some(f => farbeMatches(p, f)));
-  if (activeFilters.extras.length) {
-    if (activeFilters.extras.includes('guenstig')) res = res.filter(p => p.guenstigFlag);
-  }
   return res;
 }
 
@@ -1694,7 +1688,6 @@ function buildRefinementQuestions(p, candidates) {
   const hasTeuer    = candidates.some(x => x.paper.teuerFlag);
   const hasVolum    = candidates.some(x => x.paper.volHoch);
 
-  if (!p.guenstig && !p.teuer && hasGuenstig && hasTeuer) questions.push('preisklasse');
   if (!p.voluminoes && hasVolum) questions.push('volumen');
   if (!hasNachh && !questions.includes('nachhaltigkeit')) questions.push('nachhaltigkeit');
 
