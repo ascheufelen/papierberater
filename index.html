@@ -313,10 +313,10 @@ textarea:focus{border-bottom-color:var(--accent);}
 <div class="demo-banner">
   <div class="demo-banner-left">
     <span class="demo-pill">Live DB</span>
-    <span>351 Papiere · Echte Datenbank · Intelligente Filtersuche</span>
+    <span>Alle Metapaper-Papiere · Echte Datenbank · Intelligente Filtersuche</span>
   </div>
   <div class="demo-banner-right">
-    <span id="dbCount" style="opacity:.8;">– Papiere geladen</span>
+    <span id="dbCount" style="opacity:.8;"></span>
   </div>
 </div>
 
@@ -563,7 +563,7 @@ textarea:focus{border-bottom-color:var(--accent);}
           <div class="loading-step" id="s3">◦ Matches bewerten</div>
           <div class="loading-step" id="s4">◦ Empfehlungen aufbereiten</div>
         </div>
-        <div class="mode-indicator" id="modeIndicator">⚡ Live-Datenbanksuche · 351 Papiere</div>
+        <div class="mode-indicator" id="modeIndicator">⚡ Live-Datenbanksuche · Alle Metapaper-Papiere</div>
       </div>
     </div>
 
@@ -766,7 +766,7 @@ async function loadDatabase() {
 loadDatabase();
 
 
-document.getElementById('dbCount').textContent = DB.length + ' Papiere geladen';
+// dbCount intentionally left empty
 
 // ─── FILTER STATE ───
 const activeFilters = { anwendung: null, druck: [], nachhaltig: [], gramm: [], oberflaeche: [], farbe: [] };
