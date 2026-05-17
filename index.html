@@ -713,9 +713,23 @@ function mapRow(r) {
   if (isPos(r['Notizblock']))                       uc.push('notizblock');
   if (isPos(r['Faltschachtel']) || isPos(r['oekologische Verpackung inklusive ueberzugspapier'])) uc.push('verpackung');
 
+  // Farbtöne
+  const col = {
+    braunton:   isPos(r['Braunton']),
+    blauton:    isPos(r['Blauton']),
+    gruenton:   isPos(r['Gruenton']),
+    rotton:     isPos(r['Rotton']),
+    gelbton:    isPos(r['Gelb-Orangton']),
+    metallic:   isPos(r['Metallisierend / Pearl']),
+    neon:       isPos(r['Neon']),
+    farbig:     isPos(r['Durchgefaerbtes bzw, farbiges Papier']),
+    dunkel:     isPos(r['Dunkle Farbe']),
+    hell:       isPos(r['Helle Farbe']),
+  };
+
   return {
     n:    r['Brand_Identifier'] || '',
-    w, s, c, wt,
+    w, s, c, wt, col,
     r: r_, hi, o, ij, t, lp, lp2, sc,
     su, uc,
     bs:   isPos(r['Bestseller']),
@@ -952,17 +966,19 @@ function farbeMatches(p, f) {
   if (f === 'Coldwhite') return p.wt === 'coldwhite';
   if (f === 'White-Coldwhite') return p.wt === 'white_coldwhite';
   if (f === 'White') return p.wt === 'white';
-  if (f === 'White-Warmwhite') return n.includes('white-warmwhite') || n.includes('white-warm');
+  if (f === 'White-Warmwhite') return p.wt === 'white' && p.col && p.col.gelbton;
   if (f === 'Warmwhite') return p.wt === 'warmwhite';
-  if (f === 'Naturfarben') return p.c === 'grau' && !n.includes('neon') && !n.includes('colors ');
-  if (f === 'Gelbtöne') return n.includes('straw') || n.includes('bagasse') || n.includes('sunflower') || n.includes('sahara') || n.includes('ivory');
-  if (f === 'Blautöne') return n.includes('bluewhite') || n.includes(' blue') || n.includes('lagoon') || n.includes('misty');
-  if (f === 'Rottöne') return n.includes('brick') || n.includes('cherry') || n.includes('sunset') || n.includes('rosewhite') || n.includes('amethyst') || n.includes('magenta');
-  if (f === 'Grüntöne') return n.includes('green') || n.includes('seaweed');
-  if (f === 'Brauntöne') return n.includes('bagasse') || n.includes('walnut') || n.includes('shitake') || n.includes('earth') || n.includes('pashmina');
-  if (f === 'Farbig') return n.includes('colors ') || n.includes('t-shirt') || n.includes('jeans') || n.includes('rough 5%');
-  if (f === 'Neon') return n.includes('neon');
-  if (f === 'Metallisierend') return n.includes('pearl') || n.includes('gold') || n.includes('silver') || n.includes('cromatico') || n.includes('chromo');
+  if (f === 'Naturfarben') return p.col.farbig && !p.col.metallic && !p.col.neon && !p.c;
+  if (f === 'Gelbtöne') return p.col.gelbton;
+  if (f === 'Blautöne') return p.col.blauton;
+  if (f === 'Rottöne') return p.col.rotton;
+  if (f === 'Grüntöne') return p.col.gruenton;
+  if (f === 'Brauntöne') return p.col.braunton;
+  if (f === 'Gelbtöne') return p.col.gelbton;
+  if (f === 'Blautöne') return p.col.blauton;
+  if (f === 'Farbig') return p.col.farbig && !p.col.metallic && !p.col.neon;
+  if (f === 'Neon') return p.col.neon;
+  if (f === 'Metallisierend') return p.col.metallic;
   return false;
 }
 
