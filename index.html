@@ -1032,8 +1032,8 @@ function nachhaltigMatches(p, n) {
 function grammMatches(p, g) {
   if (g === '< 100 g/m²') return p.w < 100;
   if (g === '100–150 g/m²') return p.w >= 100 && p.w <= 150;
-  if (g === '150–250 g/m²') return p.w > 150 && p.w <= 250;
-  if (g === '250–350 g/m²') return p.w > 250 && p.w <= 350;
+  if (g === '150–250 g/m²') return p.w >= 150 && p.w <= 250;
+  if (g === '250–350 g/m²') return p.w >= 250 && p.w <= 350;
   if (g === '> 350 g/m²') return p.w > 350;
   return true;
 }
@@ -1080,7 +1080,7 @@ function applyHardFilters(papers) {
     res = res.filter(p => p.uc.includes(uc));
   }
   if (activeFilters.druck.length)
-    res = res.filter(p => activeFilters.druck.some(d => druckMatches(p, d)));
+    res = res.filter(p => activeFilters.druck.every(d => druckMatches(p, d)));
   if (activeFilters.nachhaltig.length)
     res = res.filter(p => activeFilters.nachhaltig.every(n => nachhaltigMatches(p, n)));
   if (activeFilters.gramm.length)
@@ -1846,7 +1846,7 @@ function applyRefinement() {
   if (gramm != null) {
     const gMap = {
       '< 100 g/m²':   [0, 99],   '100–150 g/m²': [100, 150],
-      '150–250 g/m²': [151, 250], '250–350 g/m²': [251, 350],
+      '150–250 g/m²': [150, 250], '250–350 g/m²': [250, 350],
       '> 350 g/m²':   [351, 9999]
     };
     const r = gMap[gramm];
