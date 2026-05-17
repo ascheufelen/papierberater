@@ -1578,7 +1578,16 @@ function renderResults(data, query) {
   container.innerHTML = '';
 
   if (!data.papers.length) {
-    container.innerHTML = '<div class="no-results"><div class="no-results-title">Keine passenden Papiere gefunden</div><div class="no-results-sub">Versuche weniger Filter oder eine andere Formulierung.</div></div>';
+    const hints = [];
+    if (activeFilters.gramm.length)   hints.push('Grammatur (' + activeFilters.gramm.join(', ') + ')');
+    if (activeFilters.druck.length)   hints.push('Druckverfahren (' + activeFilters.druck.join(' + ') + ')');
+    if (activeFilters.anwendung)      hints.push('Anwendung (' + activeFilters.anwendung + ')');
+    if (activeFilters.oberflaeche.length) hints.push('Oberfläche (' + activeFilters.oberflaeche.join(', ') + ')');
+    if (activeFilters.farbe.length)   hints.push('Farbe (' + activeFilters.farbe.join(', ') + ')');
+    const hintText = hints.length > 1
+      ? 'Die Kombination aus ' + hints.join(' · ') + ' ergibt keine Treffer. Versuche einen der Filter zu entfernen.'
+      : 'Keine passenden Papiere für diese Anfrage gefunden. Versuche weniger Filter oder eine andere Formulierung.';
+    container.innerHTML = '<div class="no-results"><div class="no-results-title">Keine passenden Papiere gefunden</div><div class="no-results-sub">' + hintText + '</div></div>';
     document.getElementById('resultsSection').style.display = 'block';
     return;
   }
