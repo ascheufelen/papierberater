@@ -728,8 +728,10 @@ async function loadDatabase() {
       if (rows.length < pageSize) break;
       from += pageSize;
     }
+    if (allRows.length > 0) console.log('RAW Spalten:', Object.keys(allRows[0]));
     DB = allRows.map(mapRow);
     DB_LOADED = true;
+    if (DB.length > 0) console.log('Mapped Beispiel:', DB[0]);
     console.log('Datenbank geladen:', DB.length, 'Papiere');
   } catch (err) {
     console.error('Supabase Fehler:', err);
