@@ -1414,7 +1414,7 @@ function buildQueryAnalysis(p, filteredCount) {
   if (p.nachhaltigkeitsbericht) feats.push('Nachhaltigkeitsbericht');
 
   if (feats.length === 0) return filteredCount + ' Papiere aus der Metapaper-Datenbank durchsucht.';
-  return 'Erkannte Anforderungen: ' + feats.join(', ') + '. ' + filteredCount + ' von ' + DB.length + ' Papieren als Kandidaten bewertet.';
+  return 'Erkannte Anforderungen: ' + feats.join(', ') + '. ' + filteredCount + ' von allen Metapaper Papieren als Kandidaten bewertet.';
 }
 
 // ─── MAIN SEARCH ───
