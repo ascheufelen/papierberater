@@ -635,6 +635,12 @@ function isPos(val) {
     v.startsWith('das papier hat keine') ||
     v.startsWith('das papier hat keinen') ||
     v.startsWith('das papier hat kein') ||
+    v.startsWith('ist kein') ||
+    v.startsWith('ist keine') ||
+    v.startsWith('ist nicht') ||
+    v.startsWith('hat keine') ||
+    v.startsWith('hat keinen') ||
+    v.startsWith('hat kein') ||
     v.includes('leider nicht') ||
     v.includes('leider kein')
   );
@@ -656,12 +662,14 @@ function mapRow(r) {
             isPos(r['Gepraegt'])           ? 'gepraegt' : 'natur';
 
   // Farbe / Weißton
-  const schwarz = isPos(r['Schwarzes Papier']);
+  const schwarz  = isPos(r['Schwarzes Papier']);
+  const isWhite  = isPos(r['Weisses Papier']);
   const c = schwarz ? 'schwarz' : (isPos(r['Grauton']) ? 'grau' : '');
   const wtRaw = (r['Weisston (gelblich bis blaeulich)'] || '').toLowerCase();
-  const wt = wtRaw.includes('gelblich') ? 'warmwhite' :
-             wtRaw.includes('blaeulich') ? 'coldwhite' :
-             wtRaw.includes('neutral')   ? 'white' : '';
+  const wt = isWhite ? (
+    wtRaw.includes('gelblich') ? 'warmwhite' :
+    wtRaw.includes('blaeulich') ? 'coldwhite' : 'white'
+  ) : '';
 
   // Druckverfahren
   const hiVal = (r['Eignung fuer HP Indigo'] || '').toLowerCase();
