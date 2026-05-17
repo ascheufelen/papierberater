@@ -173,6 +173,7 @@ textarea:focus{border-bottom-color:var(--accent);}
 .eco-block{background:var(--green-bg);border:1px solid var(--green-border);border-radius:2px;padding:8px 11px;font-size:.82rem;line-height:1.55;color:#2A5A2A;margin-bottom:12px;}
 .upgrade-block{background:#FFF8F0;border:1px solid #FFE0C0;border-radius:2px;padding:7px 11px;font-size:.78rem;line-height:1.5;color:#7A4A10;margin-bottom:12px;}
 .card-links{display:flex;gap:7px;padding:10px 18px 14px;border-top:1px solid var(--rule);flex-wrap:wrap;}
+.umschlag-hint{font-family:'Nunito Sans',sans-serif;font-size:.6rem;letter-spacing:.07em;text-transform:uppercase;color:#4a6fa5;background:#EEF3FA;border-top:1px solid #d0dff0;padding:7px 18px;}
 .link-btn{font-family:'Nunito Sans',sans-serif;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding:7px 14px;border-radius:2px;text-decoration:none;cursor:pointer;border:none;transition:all .15s;display:flex;align-items:center;gap:5px;}
 .link-btn.primary{background:var(--green);color:#fff;}
 .link-btn.primary:hover{background:#2A5A2A;}
@@ -428,7 +429,6 @@ textarea:focus{border-bottom-color:var(--accent);}
     <div class="filter-group" id="f-extras">
       <div class="filter-group-label">Extras</div>
       <div class="filter-pills">
-        <button class="filter-pill" onclick="togglePill(this,'extras','umschlag')">Mit Briefumschlag</button>
         <button class="filter-pill" onclick="togglePill(this,'extras','guenstig')">Günstig</button>
       </div>
     </div>
@@ -915,7 +915,6 @@ function updateActiveFilterDisplay() {
   if (activeFilters.oberflaeche.length)   parts.push('Oberfläche ' + activeFilters.oberflaeche.join(' oder '));
   if (activeFilters.farbe.length)         parts.push('Farbe/Weißton ' + activeFilters.farbe.join(' oder '));
   if (activeFilters.nachhaltig.length)    parts.push('nachhaltig (' + activeFilters.nachhaltig.join(', ') + ')');
-  if ((activeFilters.extras || []).includes('umschlag')) parts.push('mit passendem Briefumschlag');
   if ((activeFilters.extras || []).includes('guenstig')) parts.push('günstig');
 
   const sentence = 'Ich suche ein Papier ' + parts.join(', ') + '.';
@@ -948,7 +947,6 @@ function injectFiltersIntoQuery() {
   if (activeFilters.oberflaeche.length) parts.push('Oberfläche ' + activeFilters.oberflaeche.join(' oder '));
   if (activeFilters.farbe.length)    parts.push('Farbe/Weißton ' + activeFilters.farbe.join(' oder '));
   if (activeFilters.nachhaltig.length) parts.push('nachhaltig (' + activeFilters.nachhaltig.join(', ') + ')');
-  if (activeFilters.extras.includes('umschlag')) parts.push('mit passendem Briefumschlag');
   if (activeFilters.extras.includes('guenstig')) parts.push('günstig');
 
   const sentence = parts.length > 0
@@ -1090,7 +1088,6 @@ function applyHardFilters(papers) {
   if (activeFilters.farbe.length)
     res = res.filter(p => activeFilters.farbe.some(f => farbeMatches(p, f)));
   if (activeFilters.extras.length) {
-    if (activeFilters.extras.includes('umschlag')) res = res.filter(p => p.umschlag);
     if (activeFilters.extras.includes('guenstig')) res = res.filter(p => p.guenstigFlag);
   }
   return res;
@@ -1384,7 +1381,8 @@ function buildCardData(paper, rank, p, rawScore) {
     shop_url: paper.shop,
     eco_info: paper.su.length ? paper.su.join(' · ') : null,
     specs: { gramm: paper.w + ' g/m²', rauhigkeit: surfaceLabel(paper.s) },
-    format: paper.format || ''
+    format: paper.format || '',
+    has_umschlag: !!paper.umschlag
   };
 }
 
@@ -1999,7 +1997,8 @@ function makeCardElement(paper, i) {
       ecoBlock +
       (paper.extra ? '<div class="card-section"><span class="card-section-label">Zusatzinfos</span><p>' + paper.extra + '</p></div>' : '') +
     '</div>' +
-    '<div class="card-links">' + sBtn + shBtn + '</div>';
+    '<div class="card-links">' + sBtn + shBtn + '</div>' +
+    (paper.has_umschlag ? '<div class="umschlag-hint">✉ Passender Briefumschlag erhältlich</div>' : '');
 
   return card;
 }
@@ -2013,7 +2012,6 @@ function triggerFilterSearch() {
   if (activeFilters.oberflaeche.length)   parts.push('Oberfläche ' + activeFilters.oberflaeche.join(' oder '));
   if (activeFilters.farbe.length)         parts.push('Farbe/Weißton ' + activeFilters.farbe.join(' oder '));
   if (activeFilters.nachhaltig.length)    parts.push('nachhaltig (' + activeFilters.nachhaltig.join(', ') + ')');
-  if ((activeFilters.extras||[]).includes('umschlag')) parts.push('mit passendem Briefumschlag');
   if ((activeFilters.extras||[]).includes('guenstig')) parts.push('günstig');
 
   const sentence = parts.length > 0
