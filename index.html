@@ -56,7 +56,17 @@ header{position:relative;z-index:1;border-bottom:1px solid var(--rule);padding:0
 @media(max-width:780px){.main-layout{grid-template-columns:1fr;}}
 
 /* ── FILTER SIDEBAR ── */
-.filter-sidebar{background:var(--warm-white);border:1px solid var(--rule);border-radius:4px;padding:18px;box-shadow:0 1px 8px var(--paper-shadow);position:sticky;top:20px;}
+.filter-sidebar{background:var(--warm-white);border:1px solid var(--rule);border-radius:4px;padding:18px;box-shadow:0 1px 8px var(--paper-shadow);}
+.filter-sidebar-wrap{position:relative;}
+
+/* ── SIDEBAR RESET BUTTON ── */
+.sidebar-reset-btn{width:100%;margin-top:18px;padding:9px 12px;background:var(--ink);color:var(--cream);border:none;border-radius:2px;font-family:'Nunito Sans',sans-serif;font-size:.72rem;letter-spacing:.06em;cursor:pointer;text-align:center;transition:background .15s;}
+.sidebar-reset-btn:hover{background:#3A2E22;}
+
+/* ── FLOATING RESET BUTTON ── */
+.floating-reset{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:200;background:var(--ink);color:var(--cream);border:none;border-radius:20px;padding:10px 22px;font-family:'Nunito Sans',sans-serif;font-size:.75rem;letter-spacing:.06em;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.28);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;transform:translateX(-50%) translateY(8px);}
+.floating-reset.visible{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0);}
+.floating-reset:hover{background:#3A2E22;}
 .filter-group{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--rule);}
 .filter-group:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
 .filter-group-label{font-family:'Nunito Sans',sans-serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;}
@@ -344,6 +354,7 @@ textarea:focus{border-bottom-color:var(--accent);}
 <div class="main-layout">
 
   <!-- ── FILTER SIDEBAR ── -->
+  <div class="filter-sidebar-wrap">
   <aside class="filter-sidebar">
 
     <!-- Aktive Filter -->
@@ -520,7 +531,13 @@ textarea:focus{border-bottom-color:var(--accent);}
       </div>
     </div>
 
+    <button class="sidebar-reset-btn" onclick="resetSearch()">↩ Erneut suchen</button>
+
   </aside>
+  </div><!-- /.filter-sidebar-wrap -->
+
+  <!-- ── FLOATING RESET BUTTON ── -->
+  <button class="floating-reset" id="floatingReset" onclick="resetSearch()">↩ Erneut suchen</button>
 
   <!-- ── INPUT + RIGHT COLUMN ── -->
   <div class="input-main">
@@ -1897,6 +1914,8 @@ function resetSearch() {
   document.getElementById('queryInput').value = '';
   document.getElementById('sendBtn').disabled = false; document.getElementById('sendBtn').innerHTML = '<span style="font-family:\'Nunito\',sans-serif;font-style:italic;">⏱</span> Erneut suchen';
   document.getElementById('scenarioBar').style.display = 'block';
+  const fb = document.getElementById('floatingReset');
+  if (fb) fb.classList.remove('visible');
   currentSearch = null;
   window.scrollTo({ top: 0, behavior: 'smooth' });
   setTimeout(() => document.getElementById('queryInput').focus(), 500);
@@ -1905,6 +1924,49 @@ function resetSearch() {
 document.getElementById('queryInput').addEventListener('keydown', e => {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); runSearch(); }
 });
+
+// ─── STICKY SIDEBAR + FLOATING BUTTON ───
+(function() {
+  const wrap    = document.querySelector('.filter-sidebar-wrap');
+  const sidebar = document.querySelector('.filter-sidebar');
+  const floatBtn = document.getElementById('floatingReset');
+  if (!wrap || !sidebar || !floatBtn) return;
+
+  // Track natural top of wrap in document
+  function docTop(el) {
+    let t = 0;
+    while (el) { t += el.offsetTop; el = el.offsetParent; }
+    return t;
+  }
+
+  function update() {
+    const scrollY   = window.scrollY;
+    const vh        = window.innerHeight;
+    const sH        = sidebar.offsetHeight;
+    const wrapTop   = docTop(wrap);          // natural top in document
+    const sidebarBottomInDoc = wrapTop + sH;
+
+    // Sidebar sticky logic
+    if (scrollY + 20 >= sidebarBottomInDoc) {
+      // Completely scrolled past sidebar → stick at top
+      sidebar.style.position = 'sticky';
+      sidebar.style.top = '20px';
+    } else {
+      // Still in normal flow → scroll with page
+      sidebar.style.position = 'relative';
+      sidebar.style.top = '';
+    }
+
+    // Floating button: show when results are visible & user has scrolled down
+    const resultsVisible = document.getElementById('resultsSection').style.display !== 'none';
+    const scrolledEnough = scrollY > 200;
+    floatBtn.classList.toggle('visible', resultsVisible && scrolledEnough);
+  }
+
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update, { passive: true });
+  update();
+})();
 
 // ─── INIT AUS EINSTIEGSSEITE (window.name) ───
 (function() {
