@@ -698,8 +698,7 @@ function mapRow(r) {
   else if (wtRaw.includes('white') && !wtRaw.includes('green') && !wtRaw.includes('rose') && !wtRaw.includes('metallic') && !wtRaw.includes('transparent')) wt = 'white';
 
   // Druckverfahren
-  const hiVal = (r['Eignung fuer HP Indigo'] || '').toLowerCase();
-  const hi = hiVal.includes('bedruckbar') || (hiVal.includes('zertifiziert') && !hiVal.includes('nicht zertifiziert'));
+  const hi = isPos(r['Eignung fuer HP Indigo']);
   const r_  = isPos(r['Eignung fuer den Riso']);
   const o   = isPos(r['Eignung fuer den Offset']);
   const ij  = isPos(r['Eignung fuer den Inkjet']);
@@ -783,7 +782,7 @@ function mapRow(r) {
   };
 }
 
-const DB_CACHE_KEY = 'metapaper_db_v3';
+const DB_CACHE_KEY = 'metapaper_db_v4';
 const DB_CACHE_TTL = 12 * 60 * 60 * 1000; // 12 Stunden
 
 async function loadDatabase() {
