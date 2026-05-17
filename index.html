@@ -1377,6 +1377,7 @@ function runSearch() {
 
   setTimeout(() => {
     clearInterval(timerInterval);
+    console.log('Suche startet, Query:', query);
     try {
       const result = searchPapers(query);
       document.getElementById('responseBadge').textContent = 'Live DB · ' + result.total_db + ' Papiere';
