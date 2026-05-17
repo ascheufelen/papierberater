@@ -551,6 +551,11 @@
 <div class="toast-container" id="toasts"></div>
 
 <script>
+// Hilfsfunktion: Spaltenname → sicherer ID-Bezeichner
+function colId(col) {
+  return 'field-' + col.replace(/[^a-zA-Z0-9_-]/g, '_');
+}
+
 let supabase = null;
 let TABLE = '';
 let PK = '';
@@ -782,8 +787,8 @@ function renderModalFields(row) {
     html += `<div class="form-group ${isLong ? 'full' : ''}">
       <label>${escHtml(col)}</label>
       ${isLong
-        ? `<textarea id="field-${escAttr(col)}" rows="3">${escHtml(String(val))}</textarea>`
-        : `<input type="text" id="field-${escAttr(col)}" value="${escAttr(String(val !== null ? val : ''))}" />`}
+        ? `<textarea id="${colId(col)}" rows="3">${escHtml(String(val))}</textarea>`
+        : `<input type="text" id="${colId(col)}" value="${escAttr(String(val !== null ? val : ''))}" />`}
     </div>`;
   });
   html += '</div>';
@@ -800,8 +805,8 @@ function renderModalFields(row) {
       html += `<div class="form-group ${isLong ? 'full' : ''}">
         <label>${escHtml(col)}</label>
         ${isLong
-          ? `<textarea id="field-${escAttr(col)}" rows="2">${escHtml(String(val !== null ? val : ''))}</textarea>`
-          : `<input type="text" id="field-${escAttr(col)}" value="${escAttr(String(val !== null ? val : ''))}" />`}
+          ? `<textarea id="${colId(col)}" rows="2">${escHtml(String(val !== null ? val : ''))}</textarea>`
+          : `<input type="text" id="${colId(col)}" value="${escAttr(String(val !== null ? val : ''))}" />`}
       </div>`;
     });
     html += '</div></details>';
@@ -817,7 +822,7 @@ async function saveRow() {
 
   const row = {};
   columns.forEach(col => {
-    const el = document.getElementById('field-' + col);
+    const el = document.getElementById(colId(col));
     if (el) row[col] = el.value;
   });
 
