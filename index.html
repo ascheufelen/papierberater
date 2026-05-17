@@ -695,7 +695,7 @@ function mapRow(r) {
   // Anwendungen
   const uc = [];
   if (isPos(r['Visitenkarten']))                    uc.push('visitenkarte');
-  if (isPos(r['Briefpapier']))                      uc.push('briefpapier');
+  if (isPos(r['Briefpapier']) || isPos(r['Rechnungen']) || isPos(r['Briefpapier mit passendem Briefumschlag'])) uc.push('briefpapier');
   if (isPos(r['Einladungen']))                      uc.push('einladung');
   if (isPos(r['Softcover Inhalt']))                 uc.push('softcover_inhalt');
   if (isPos(r['Softcover Umschlag']))               uc.push('softcover_umschlag');
@@ -954,7 +954,7 @@ function grammMatches(p, g) {
 
 function oberflaecheMatches(p, o) {
   if (o === 'extrem rau') return p.s === 'extrarau' || p.s === 'rau';
-  if (o === 'rau') return p.s === 'rau';
+  if (o === 'rau') return p.s === 'rau' || p.s === 'extrarau';
   if (o === 'glatt') return p.s === 'glatt' || p.s === 'sehr glatt' || p.s === 'leicht gestrichen';
   if (o === 'sehr glatt') return p.s === 'sehr glatt' || p.s === 'voll gestrichen';
   if (o === 'gepraegt') return p.n.toLowerCase().includes('emboss');
