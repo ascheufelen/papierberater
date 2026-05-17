@@ -173,7 +173,6 @@ textarea:focus{border-bottom-color:var(--accent);}
 .eco-block{background:var(--green-bg);border:1px solid var(--green-border);border-radius:2px;padding:8px 11px;font-size:.82rem;line-height:1.55;color:#2A5A2A;margin-bottom:12px;}
 .upgrade-block{background:#FFF8F0;border:1px solid #FFE0C0;border-radius:2px;padding:7px 11px;font-size:.78rem;line-height:1.5;color:#7A4A10;margin-bottom:12px;}
 .card-links{display:flex;gap:7px;padding:10px 18px 14px;border-top:1px solid var(--rule);flex-wrap:wrap;}
-.umschlag-hint{font-family:'Nunito Sans',sans-serif;font-size:.6rem;letter-spacing:.07em;text-transform:uppercase;color:#4a6fa5;background:#EEF3FA;border-top:1px solid #d0dff0;padding:7px 18px;}
 .link-btn{font-family:'Nunito Sans',sans-serif;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding:7px 14px;border-radius:2px;text-decoration:none;cursor:pointer;border:none;transition:all .15s;display:flex;align-items:center;gap:5px;}
 .link-btn.primary{background:var(--green);color:#fff;}
 .link-btn.primary:hover{background:#2A5A2A;}
@@ -1380,7 +1379,7 @@ function buildCardData(paper, rank, p, rawScore) {
     sample_url: paper.muster,
     shop_url: paper.shop,
     eco_info: paper.su.length ? paper.su.join(' · ') : null,
-    specs: { gramm: paper.w + ' g/m²', rauhigkeit: surfaceLabel(paper.s) },
+    specs: Object.assign({ gramm: paper.w + ' g/m²', rauhigkeit: surfaceLabel(paper.s) }, paper.umschlag ? { umschlag: 'Erhältlich' } : {}),
     format: paper.format || '',
     has_umschlag: !!paper.umschlag
   };
@@ -1428,16 +1427,14 @@ function searchPapers(query) {
   if (p.scodix      && !activeFilters.druck.some(d => d === 'Scodix' || d === 'MGI'))    druckChecks.push(x => x.sc);
   if (p.heissfolie  && !activeFilters.druck.includes('Heißfolie'))                        druckChecks.push(x => x.lp2);
   if (druckChecks.length > 0) {
-    const druckFiltered = filtered.filter(x => druckChecks.every(fn => fn(x)));
-    if (druckFiltered.length >= 3) filtered = druckFiltered;
+    filtered = filtered.filter(x => druckChecks.every(fn => fn(x)));
   }
 
   // Grammatur aus Query als harter Vorfilter
   if ((p.minWeight || p.maxWeight) && !activeFilters.gramm.length) {
     const lo = p.minWeight || 0;
     const hi = p.maxWeight || 9999;
-    const grammFiltered = filtered.filter(x => x.w >= lo && x.w <= hi);
-    if (grammFiltered.length >= 3) filtered = grammFiltered;
+    filtered = filtered.filter(x => x.w >= lo && x.w <= hi);
   }
   const scodixActive = p.scodix || activeFilters.druck.some(d => d === 'Scodix' || d === 'MGI');
   const hasContext = p.riso || p.indigo || p.offset || p.letterpress || p.scodix || p.inkjet || p.toner || p.heissfolie ||
@@ -1464,7 +1461,7 @@ function searchPapers(query) {
   const nichtWeistonActive = p.schwarz || p.naturfarben ||
     activeFilters.farbe.some(f => ['Schwarz','Naturfarben','Gelbtöne','Blautöne','Rottöne','Grüntöne','Brauntöne','Schwarz','Farbig','Neon','Metallisierend'].includes(f));
   if (scodixActive && !nichtWeistonActive) {
-    const rdPool = DB.filter(pap => pap.n.includes('ROUGH DELUXE') && pap.sc);
+    const rdPool = applyHardFilters(DB).filter(pap => pap.n.includes('ROUGH DELUXE') && pap.sc);
     if (rdPool.length) {
       const rdScored = rdPool.map(pap => ({ paper: pap, score: scorePaper(pap, p) }));
       rdScored.sort((a, b) => b.score - a.score);
@@ -1967,7 +1964,7 @@ function makeCardElement(paper, i) {
   const aiScoreHtml = paper.match_score
     ? '<div class="ai-score ' + aiScoreCls + '"><span class="ai-score-label">AI Score</span><span class="ai-score-val">' + paper.match_score + '%</span></div>'
     : '';
-  const labelsMap = {gramm:'Grammatur',rauhigkeit:'Oberfläche',dicke:'Dicke',cie_weisse:'CIE Weiße',min_order:'Mindestbestellung',volumen:'Volumen',lager:'Lager'};
+  const labelsMap = {gramm:'Grammatur',rauhigkeit:'Oberfläche',dicke:'Dicke',cie_weisse:'CIE Weiße',min_order:'Mindestbestellung',volumen:'Volumen',lager:'Lager',umschlag:'✉ Briefumschlag'};
   const specItems = Object.entries(paper.specs || {}).filter(([,v]) => v).map(([k,v]) =>
     '<div class="spec-item"><span class="spec-label">' + (labelsMap[k]||k) + '</span><span class="spec-val">' + v + '</span></div>'
   ).join('');
@@ -1997,8 +1994,7 @@ function makeCardElement(paper, i) {
       ecoBlock +
       (paper.extra ? '<div class="card-section"><span class="card-section-label">Zusatzinfos</span><p>' + paper.extra + '</p></div>' : '') +
     '</div>' +
-    '<div class="card-links">' + sBtn + shBtn + '</div>' +
-    (paper.has_umschlag ? '<div class="umschlag-hint">✉ Passender Briefumschlag erhältlich</div>' : '');
+    '<div class="card-links">' + sBtn + shBtn + '</div>';
 
   return card;
 }
