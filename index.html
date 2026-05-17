@@ -531,13 +531,13 @@ textarea:focus{border-bottom-color:var(--accent);}
       </div>
     </div>
 
-    <button class="sidebar-reset-btn" onclick="resetSearch()">↩ Erneut suchen</button>
+    <button class="sidebar-reset-btn" onclick="triggerFilterSearch()">↩ Erneut suchen</button>
 
   </aside>
   </div><!-- /.filter-sidebar-wrap -->
 
   <!-- ── FLOATING RESET BUTTON ── -->
-  <button class="floating-reset" id="floatingReset" onclick="resetSearch()">↩ Erneut suchen</button>
+  <button class="floating-reset" id="floatingReset" onclick="triggerFilterSearch()">↩ Erneut suchen</button>
 
   <!-- ── INPUT + RIGHT COLUMN ── -->
   <div class="input-main">
@@ -1935,6 +1935,32 @@ function makeCardElement(paper, i) {
     '<div class="card-links">' + sBtn + shBtn + '</div>';
 
   return card;
+}
+
+// Filter in Eingabemaske schreiben und Suche starten
+function triggerFilterSearch() {
+  const parts = [];
+  if (activeFilters.anwendung)            parts.push('für ' + activeFilters.anwendung);
+  if (activeFilters.druck.length)         parts.push('gedruckt im ' + activeFilters.druck.join(' / '));
+  if (activeFilters.gramm.length)         parts.push('Grammatur ' + activeFilters.gramm.join(' oder '));
+  if (activeFilters.oberflaeche.length)   parts.push('Oberfläche ' + activeFilters.oberflaeche.join(' oder '));
+  if (activeFilters.farbe.length)         parts.push('Farbe/Weißton ' + activeFilters.farbe.join(' oder '));
+  if (activeFilters.nachhaltig.length)    parts.push('nachhaltig (' + activeFilters.nachhaltig.join(', ') + ')');
+  if ((activeFilters.extras||[]).includes('umschlag')) parts.push('mit passendem Briefumschlag');
+  if ((activeFilters.extras||[]).includes('guenstig')) parts.push('günstig');
+
+  const sentence = parts.length > 0
+    ? 'Ich suche ein Papier ' + parts.join(', ') + '.'
+    : document.getElementById('queryInput').value.trim();
+
+  if (sentence) {
+    document.getElementById('queryInput').value = sentence;
+    runSearch();
+  } else {
+    // Kein Filter, keine Query → Eingabefeld fokussieren
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => document.getElementById('queryInput').focus(), 300);
+  }
 }
 
 function resetSearch() {
