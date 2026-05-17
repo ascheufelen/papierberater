@@ -662,14 +662,15 @@ function mapRow(r) {
             isPos(r['Gepraegt'])           ? 'gepraegt' : 'natur';
 
   // Farbe / Weißton
-  const schwarz  = isPos(r['Schwarzes Papier']);
-  const isWhite  = isPos(r['Weisses Papier']);
+  const schwarz = isPos(r['Schwarzes Papier']);
   const c = schwarz ? 'schwarz' : (isPos(r['Grauton']) ? 'grau' : '');
-  const wtRaw = (r['Weisston (gelblich bis blaeulich)'] || '').toLowerCase();
-  const wt = isWhite ? (
-    wtRaw.includes('gelblich') ? 'warmwhite' :
-    wtRaw.includes('blaeulich') ? 'coldwhite' : 'white'
-  ) : '';
+  const wtRaw = (r['Weisston (gelblich bis blaeulich)'] || '').toLowerCase().replace(/\s+/g, ' ').trim();
+  let wt = '';
+  if      (wtRaw.includes('white-coldwhite'))  wt = 'white_coldwhite';
+  else if (wtRaw.includes('white-warmwhite'))  wt = 'white';
+  else if (wtRaw.includes('warmwhite') || wtRaw.includes('off-white') || wtRaw.includes('ivory') || wtRaw.includes('natural')) wt = 'warmwhite';
+  else if (wtRaw.includes('coldwhite') || wtRaw.includes('bluewhite') || wtRaw.includes('greywhite') || wtRaw.includes('grey white') || wtRaw.includes('icewhite')) wt = 'coldwhite';
+  else if (wtRaw.includes('white') && !wtRaw.includes('green') && !wtRaw.includes('rose') && !wtRaw.includes('metallic') && !wtRaw.includes('transparent')) wt = 'white';
 
   // Druckverfahren
   const hiVal = (r['Eignung fuer HP Indigo'] || '').toLowerCase();
